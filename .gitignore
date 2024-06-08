@@ -1,0 +1,9 @@
+.vs
+CodeAnalysis
+out
+CMakeSettings.json
+bin
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+Makefile

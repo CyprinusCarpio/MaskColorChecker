@@ -1,0 +1,148 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0308
+header_name {.h}
+code_name {.cxx}
+decl {\#include "Canvas.h"} {public local
+}
+
+decl {\#include "Program.h"} {private local
+}
+
+Function {make_window()} {open
+} {
+  Fl_Window {} {
+    label {Mask Color Checker v0.1} open
+    xywh {1296 559 400 350} type Double resizable size_range {400 350 0 0} visible
+  } {
+    Fl_Group {} {open
+      xywh {0 20 400 330} resizable
+    } {
+      Fl_Group {} {
+        label {Mask Color Checker v0.1} open
+        xywh {0 20 180 330} box UP_BOX labelfont 3 labelsize 15 align 17
+      } {
+        Fl_Spinner g_overlapSpinner {
+          label {Actual overlap:}
+          callback {OnGui(CB_OVERLAP);}
+          tooltip {Mapframe properties > Samplers > Actual overlap (px)} xywh {115 85 60 20} when 1 maximum 512
+        }
+        Fl_Spinner g_colorsPerTileSpinner {
+          label {Colors per tile:}
+          callback {OnGui(CB_COLORSPERTILE);}
+          tooltip {How many colors are allowed in a tile?} xywh {115 130 60 20} when 1 minimum 4 maximum 6 value 5
+        }
+        Fl_Check_Button g_solidFillCheckButton {
+          label {Solid fill}
+          callback {OnGui(CB_SOLIDFILL);}
+          tooltip {Whether to use solid color to indicate bad tiles} xywh {97 221 75 15} down_box DOWN_BOX when 1
+        }
+        Fl_Button g_badTileFillColorButton {
+          label {Bad tile color}
+          callback {OnGui(CB_BADTILECOLOR);}
+          tooltip {This color will be used to draw bad tile indicators.} xywh {5 218 90 22} box DOWN_BOX color 1
+        }
+        Fl_Output g_maskPathOutput {
+          label {Mask path:}
+          xywh {5 185 170 25} align 5
+        }
+        Fl_Button g_loadMaskButton {
+          label {Load mask    @fileopen}
+          callback {OnGui(CB_LOADMASK);}
+          tooltip {Load mask image to be checked} xywh {80 155 95 25} labelsize 12
+        }
+        Fl_Button g_checkButton {
+          label {Check @->}
+          callback {OnGui(CB_CHECK);}
+          tooltip {Start the check. This may hang the program for a while.} xywh {5 320 65 25} labelsize 12 hotspot
+        }
+        Fl_Button g_saveOutputButton {
+          label {Save bad tiles @filesave}
+          callback {OnGui(CB_SAVEOUTPUT);}
+          tooltip {Save the output faulty tiles image} xywh {75 320 100 25} labelsize 12 deactivate
+        }
+        Fl_Box {} {
+          xywh {0 280 180 5} resizable
+        }
+        Fl_Button g_gridColorButton {
+          label {Grid color}
+          callback {OnGui(CB_GRIDCOLOR);}
+          tooltip {This color will be used to draw a grid marking the tile borders} xywh {5 250 90 22} box DOWN_BOX color 6
+        }
+        Fl_Check_Button g_drawGridCheckButton {
+          label {Draw grid}
+          callback {OnGui(CB_DRAWGRID);}
+          tooltip {Whether to draw the grid} xywh {97 254 80 15} down_box DOWN_BOX when 1
+        }
+        Fl_Box g_parametersStatusBox {
+          label {Invalid parameters}
+          image {invalidParameters.xpm} deimage {validParameters.xpm} xywh {10 40 165 22} align 256
+        }
+        Fl_Choice g_tileSizeChoice {
+          label {Tile size:}
+          callback {OnGui(CB_TILESIZE);} open
+          xywh {115 62 60 20} down_box BORDER_BOX when 1
+          code0 {g_tileSizeChoice->add("128|256|512|1024|2048");}
+          code1 {g_tileSizeChoice->value(1);}
+        } {}
+        Fl_Spinner g_tilesInRowSpinner {
+          label {Tiles in row:}
+          callback {OnGui(CB_TILECOUNT);}
+          xywh {115 108 60 20} when 1
+        }
+        Fl_Button g_fixButton {
+          label {Fix        @redo}
+          callback {OnGui(CB_FIX);}
+          tooltip {Heuristically fix the mask and save it to a different location} xywh {5 290 65 25} labelsize 12 deactivate
+        }
+        Fl_Button g_saveGridButton {
+          label {Save grid         @filesave}
+          callback {OnGui(CB_SAVEGRID);}
+          tooltip {Save the grid to a image} xywh {75 290 100 25} labelsize 12 deactivate
+        }
+      }
+      Fl_Box g_canvas {
+        xywh {180 20 220 330} resizable
+        class Canvas
+      }
+    }
+    Fl_Menu_Bar g_menuBar {open
+      xywh {0 0 400 20} labelsize 12
+    } {
+      Submenu g_projectMenu {
+        label Project open selected
+        xywh {0 0 62 20}
+      } {
+        MenuItem {} {
+          label {@fileopen Open}
+          callback {OnGui(CB_OPEN);}
+          xywh {0 0 30 20} shortcut 0x4006f
+        }
+        MenuItem g_menuItemSave {
+          label {@filesave Save}
+          callback {OnGui(CB_SAVE);}
+          xywh {0 0 30 20} shortcut 0x40073
+        }
+        MenuItem g_menuItemSaveAs {
+          label {@filesaveas Save as}
+          callback {OnGui(CB_SAVEAS);}
+          xywh {0 0 30 20} divider
+        }
+      }
+      Submenu {} {
+        label About open
+        xywh {0 0 62 20}
+      } {
+        MenuItem {} {
+          label {@. Help  }
+          callback {OnGui(CB_HELP);}
+          xywh {0 0 30 20}
+        }
+        MenuItem {} {
+          label {@. About  }
+          callback {OnGui(CB_ABOUT);}
+          xywh {0 0 30 20}
+        }
+      }
+    }
+  }
+}
