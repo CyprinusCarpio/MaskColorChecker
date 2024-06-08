@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0308
+version 1.0400
 header_name {.h}
 code_name {.cxx}
 decl {\#include "Canvas.h"} {public local
@@ -75,12 +75,12 @@ Function {make_window()} {open
         }
         Fl_Box g_parametersStatusBox {
           label {Invalid parameters}
-          image {invalidParameters.xpm} deimage {validParameters.xpm} xywh {10 40 165 22} align 256
+          image {invalidParameters.xpm} compress_image 0 deimage {validParameters.xpm} compress_deimage 0 xywh {10 40 165 22} align 256
         }
         Fl_Choice g_tileSizeChoice {
           label {Tile size:}
-          callback {OnGui(CB_TILESIZE);} open
-          xywh {115 62 60 20} down_box BORDER_BOX when 1
+          callback {OnGui(CB_TILESIZE);} open selected
+          tooltip {Mapframe properties > Samplers > Satellite/Surface (mask) tiles > Size (px)} xywh {115 62 60 20} down_box BORDER_BOX when 1
           code0 {g_tileSizeChoice->add("128|256|512|1024|2048");}
           code1 {g_tileSizeChoice->value(1);}
         } {}
@@ -109,7 +109,7 @@ Function {make_window()} {open
       xywh {0 0 400 20} labelsize 12
     } {
       Submenu g_projectMenu {
-        label Project open selected
+        label Project open
         xywh {0 0 62 20}
       } {
         MenuItem {} {
