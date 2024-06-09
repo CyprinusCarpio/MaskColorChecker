@@ -35,7 +35,7 @@ include_directories(fltk/)
 
 add_executable(MaskColorChecker src/main.cpp fltk/MaskColorCheckerGUI.cxx "src/Canvas.cpp" "src/Program.cpp" "include/sft.rc")
 
-set(EXE_NAME "Mask Color Checker")
+set(EXE_NAME "MaskColorChecker")
 
 set_target_properties(MaskColorChecker PROPERTIES OUTPUT_NAME ${EXE_NAME})
 
