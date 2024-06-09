@@ -171,6 +171,11 @@ void FixTile(unsigned char* image, Tile& t)
 			colorCount[rgb]++;
 		}
 	}
+	// Fixing one of the previous tiles may have fixed this one too.
+	// If that happens we can skip this tile
+	if (colorCount.size() <= g_colorsPerTile)
+		return;
+
 	std::vector<std::pair<uint32_t, unsigned int>> colors;
 	for (auto& pair : colorCount)
 	{
