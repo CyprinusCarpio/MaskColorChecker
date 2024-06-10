@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(MaskColorChecker VERSION 0.1.0)
+project(MaskColorChecker VERSION 0.2.0)
 set (CMAKE_CXX_STANDARD 17)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")

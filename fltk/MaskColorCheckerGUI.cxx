@@ -365,10 +365,10 @@ Fl_Menu_Item menu_g_menuBar[] = {
 
 Fl_Double_Window* make_window() {
   Fl_Double_Window* w;
-  { Fl_Double_Window* o = new Fl_Double_Window(400, 350, "Mask Color Checker v0.1");
+  { Fl_Double_Window* o = new Fl_Double_Window(400, 350, "Mask Color Checker v0.2");
     w = o; (void)w;
     { Fl_Group* o = new Fl_Group(0, 20, 400, 330);
-      { Fl_Group* o = new Fl_Group(0, 20, 180, 330, "Mask Color Checker v0.1");
+      { Fl_Group* o = new Fl_Group(0, 20, 180, 330, "Mask Color Checker v0.2");
         o->box(FL_UP_BOX);
         o->labelfont(3);
         o->labelsize(15);
@@ -448,6 +448,7 @@ Fl_Double_Window* make_window() {
           g_tileSizeChoice->value(1);
         } // Fl_Choice* g_tileSizeChoice
         { g_tilesInRowSpinner = new Fl_Spinner(115, 108, 60, 20, "Tiles in row:");
+          g_tilesInRowSpinner->tooltip("Mapframe properties > Samplers > Tiles in row (tile)");
           g_tilesInRowSpinner->callback((Fl_Callback*)cb_g_tilesInRowSpinner);
           g_tilesInRowSpinner->when(FL_WHEN_CHANGED);
         } // Fl_Spinner* g_tilesInRowSpinner

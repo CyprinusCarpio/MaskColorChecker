@@ -11,14 +11,14 @@ decl {\#include "Program.h"} {private local
 Function {make_window()} {open
 } {
   Fl_Window {} {
-    label {Mask Color Checker v0.1} open
-    xywh {1296 559 400 350} type Double resizable size_range {400 350 0 0} visible
+    label {Mask Color Checker v0.2} open selected
+    xywh {598 519 400 350} type Double resizable size_range {400 350 0 0} visible
   } {
     Fl_Group {} {open
       xywh {0 20 400 330} resizable
     } {
       Fl_Group {} {
-        label {Mask Color Checker v0.1} open
+        label {Mask Color Checker v0.2} open
         xywh {0 20 180 330} box UP_BOX labelfont 3 labelsize 15 align 17
       } {
         Fl_Spinner g_overlapSpinner {
@@ -79,7 +79,7 @@ Function {make_window()} {open
         }
         Fl_Choice g_tileSizeChoice {
           label {Tile size:}
-          callback {OnGui(CB_TILESIZE);} open selected
+          callback {OnGui(CB_TILESIZE);} open
           tooltip {Mapframe properties > Samplers > Satellite/Surface (mask) tiles > Size (px)} xywh {115 62 60 20} down_box BORDER_BOX when 1
           code0 {g_tileSizeChoice->add("128|256|512|1024|2048");}
           code1 {g_tileSizeChoice->value(1);}
@@ -87,7 +87,7 @@ Function {make_window()} {open
         Fl_Spinner g_tilesInRowSpinner {
           label {Tiles in row:}
           callback {OnGui(CB_TILECOUNT);}
-          xywh {115 108 60 20} when 1
+          tooltip {Mapframe properties > Samplers > Tiles in row (tile)} xywh {115 108 60 20} when 1
         }
         Fl_Button g_fixButton {
           label {Fix        @redo}
