@@ -11,7 +11,7 @@ decl {\#include "Program.h"} {private local
 Function {make_window()} {open
 } {
   Fl_Window {} {
-    label {Mask Color Checker v0.2} open selected
+    label {Mask Color Checker v0.2} open
     xywh {598 519 400 350} type Double resizable size_range {400 350 0 0} visible
   } {
     Fl_Group {} {open
@@ -23,8 +23,8 @@ Function {make_window()} {open
       } {
         Fl_Spinner g_overlapSpinner {
           label {Actual overlap:}
-          callback {OnGui(CB_OVERLAP);}
-          tooltip {Mapframe properties > Samplers > Actual overlap (px)} xywh {115 85 60 20} when 1 maximum 512
+          callback {OnGui(CB_OVERLAP);} selected
+          tooltip {Mapframe properties > Samplers > Actual overlap (px)} xywh {115 85 60 20} when 1 minimum 0 maximum 512 value 0
         }
         Fl_Spinner g_colorsPerTileSpinner {
           label {Colors per tile:}

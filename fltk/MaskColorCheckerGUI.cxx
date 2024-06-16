@@ -375,7 +375,9 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP|FL_ALIGN_INSIDE));
         { g_overlapSpinner = new Fl_Spinner(115, 85, 60, 20, "Actual overlap:");
           g_overlapSpinner->tooltip("Mapframe properties > Samplers > Actual overlap (px)");
+          g_overlapSpinner->minimum(0);
           g_overlapSpinner->maximum(512);
+          g_overlapSpinner->value(0);
           g_overlapSpinner->callback((Fl_Callback*)cb_g_overlapSpinner);
           g_overlapSpinner->when(FL_WHEN_CHANGED);
         } // Fl_Spinner* g_overlapSpinner
