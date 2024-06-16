@@ -423,7 +423,7 @@ void InitializeProgram()
 					{
 						std::filesystem::path path = std::filesystem::path(val->as<std::string>()->get());
 						g_recentProjects.push_back(path);
-						std::string entry = "Project/_@reload Recent/    " + path.filename().u8string();
+						std::string entry = "Project/_@reload Recent/    " + path.stem().u8string();
 						g_menuBar->add(entry.c_str(), 0, (Fl_Callback*)MenuCB, (void*)(g_recentProjects.size() - 1 + 200), 0);
 						i++;
 					}
