@@ -281,9 +281,13 @@ void CheckColumns(unsigned int firstX, unsigned int lastX)
 
 bool CheckParametersValid()
 {
+	int spacing = g_tileSize - g_overlap;
+	int lastTileStart = (spacing * (g_tilesCount - 1)) - (g_overlap / 2.f);
+	int secondToLastTileStart = (spacing * (g_tilesCount - 2)) - (g_overlap / 2.f);
 	if ((g_tileSize != 128 && g_tileSize != 256 && g_tileSize != 512 && g_tileSize != 1024 && g_tileSize != 2048) ||
 		(g_colorsPerTile < 4 || g_colorsPerTile > 6) ||
-		(g_maskImg == nullptr))
+		(g_maskImg == nullptr) || lastTileStart > g_maskImgX || lastTileStart < g_maskImgX - g_tileSize ||
+		secondToLastTileStart >= g_maskImgX - g_tileSize)
 	{
 		g_parametersStatusBox->label("Invalid parameters");
 		g_parametersStatusBox->activate();
@@ -507,6 +511,7 @@ void OnGui(int e)
 		}
 		g_unsaved = true;
 		g_menuItemSave->activate();
+		g_faultyTiles.clear();
 		CheckParametersValid();
 	}
 	else if (e == CB_OVERLAP)
@@ -514,6 +519,7 @@ void OnGui(int e)
 		g_overlap = (unsigned int)g_overlapSpinner->value();
 		g_unsaved = true;
 		g_menuItemSave->activate();
+		g_faultyTiles.clear();
 		CheckParametersValid();
 	}
 	else if (e == CB_TILECOUNT)
@@ -521,6 +527,7 @@ void OnGui(int e)
 		g_tilesCount = (unsigned int)g_tilesInRowSpinner->value();
 		g_unsaved = true;
 		g_menuItemSave->activate();
+		g_faultyTiles.clear();
 		CheckParametersValid();
 	}
 	else if (e == CB_COLORSPERTILE)
