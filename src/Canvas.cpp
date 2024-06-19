@@ -2,6 +2,8 @@
 #include "Program.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include "stb_image_resize2.h"
 
 #include <string>
 #include <iostream>
@@ -17,7 +19,14 @@ Canvas::Canvas(int x, int y, int w, int h) : Fl_Gl_Window(x, y, w, h)
 
 Canvas::~Canvas()
 {
-
+	if (maskImage != nullptr)
+	{
+		glDeleteTextures(1, &textureID);
+		if (maskImageScale != 1.f)
+		{
+			delete[] maskImage;
+		}
+	}
 }
 
 void Canvas::draw()
@@ -58,11 +67,11 @@ void Canvas::draw()
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(0.0f, 0.0f);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(maskImgX, 0.0f);
+		glVertex2f(maskImgX * maskImageScale, 0.0f);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(maskImgX, maskImgY);
+		glVertex2f(maskImgX * maskImageScale, maskImgY * maskImageScale);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0.0f, maskImgY);
+		glVertex2f(0.0f, maskImgY * maskImageScale);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
@@ -212,7 +221,7 @@ void Canvas::drawGrid()
 		}
 		else if (x == g_tilesCount - 1)
 		{
-			tileWidth = maskImgX - xPos + 1;
+			tileWidth = (maskImgX * maskImageScale) - xPos + 1;
 		}
 
 		for (int y = 0; y < g_tilesCount; y++)
@@ -227,7 +236,7 @@ void Canvas::drawGrid()
 			}
 			else if (y == g_tilesCount - 1)
 			{
-				tileHeight = maskImgY - yPos + 1;
+				tileHeight = (maskImgY * maskImageScale) - yPos + 1;
 			}
 
 			gl_rect(xPos, yPos, tileWidth, tileHeight);
@@ -252,7 +261,7 @@ void Canvas::drawFaultyTiles()
 		}
 		else if (x == g_tilesCount - 1)
 		{
-			tileWidth = maskImgX - xPos + 1;
+			tileWidth = (maskImgX * maskImageScale) - xPos + 1;
 		}
 		int tileHeight = g_tileSize;
 
@@ -264,7 +273,7 @@ void Canvas::drawFaultyTiles()
 		}
 		else if (y == g_tilesCount - 1)
 		{
-			tileHeight = maskImgY - yPos + 1;
+			tileHeight = (maskImgY * maskImageScale) - yPos + 1;
 		}
 		// Rendering text outside of the viewport is fucked up
 		// so, need to prevent it
@@ -321,9 +330,31 @@ void Canvas::set(unsigned char* img, int mX, int mY, std::deque<Tile>* fT)
 	{
 		glDeleteTextures(1, &textureID);
 		textureID = 0;
+		// If maskImageScale isn't 1.0 then we know we have a rescaled copy
+		// Needs to be deleted to avoid a memory leak.
+		if (maskImageScale != 1.f)
+		{
+			delete[] maskImage;
+		}
 	}
 	faultyTiles = fT;
-	maskImage = img;
 	maskImgX = mX;
 	maskImgY = mY;
+	maskImage = nullptr;
+	// If the mask size exceeds the max GL texture size, it would be displayed as
+	// a solid white rectangle. To fix this we draw a copy rescaled to 4096x4096 instead
+	GLint maxTextureSize = 0;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+	if (maskImgX > maxTextureSize)
+	{
+		maskImageScale = (float)maskImgX / 4096;
+		maskImage = stbir_resize_uint8_srgb(img, maskImgX, maskImgY, 0, nullptr, 4096, 4096, 0, STBIR_RGB);
+		maskImgX = 4096;
+		maskImgY = 4096;
+	}
+	else
+	{
+		maskImage = img;
+		maskImageScale = 1.f;
+	}
 }

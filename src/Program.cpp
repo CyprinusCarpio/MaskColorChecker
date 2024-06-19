@@ -1011,9 +1011,7 @@ Tile::Tile(unsigned int ax, unsigned int ay, unsigned int apx, unsigned int apy,
 		}
 		else if (x == g_tilesCount - 1) // Top right
 		{
-			//std::cout << M.x << " " << M.y << " " << M.w << " " << M.h << "\n";
 			M.Extend(NE);
-			//std::cout << M.x << " " << M.y << " " << M.w << " " << M.h << "\n";
 			NE.w = 0;
 			N.w = 0;
 			E.w = 0;

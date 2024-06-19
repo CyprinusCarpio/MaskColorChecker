@@ -28,8 +28,9 @@ class Canvas : public Fl_Gl_Window
 
 	GLuint textureID = 0;
 	unsigned char* maskImage = nullptr;
+	float maskImageScale = 1.f;
 
-	std::deque<Tile>* faultyTiles;
+	std::deque<Tile>* faultyTiles = nullptr;
 public:
 	Canvas(int x, int y, int w, int h);
 	~Canvas();
