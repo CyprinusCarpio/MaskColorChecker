@@ -548,6 +548,7 @@ void OnGui(int e)
 		{
 			g_badTileColor = fl_rgb_color(r, g, b);
 			g_badTileFillColorButton->color(g_badTileColor);
+			g_badTileFillColorButton->labelcolor(fl_contrast(FL_FOREGROUND_COLOR, g_badTileColor));
 			g_badTileFillColorButton->redraw();
 			g_unsaved = true;
 			g_menuItemSave->activate();
@@ -565,6 +566,7 @@ void OnGui(int e)
 		{
 			g_gridColor = fl_rgb_color(r, g, b);
 			g_gridColorButton->color(g_gridColor);
+			g_gridColorButton->labelcolor(fl_contrast(FL_FOREGROUND_COLOR, g_gridColor));
 			g_gridColorButton->redraw();
 			g_unsaved = true;
 			g_menuItemSave->activate();
