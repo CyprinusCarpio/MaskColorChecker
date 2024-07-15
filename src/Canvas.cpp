@@ -275,49 +275,25 @@ void Canvas::drawFaultyTiles()
 		{
 			tileHeight = (maskImgY * maskImageScale) - yPos + 1;
 		}
-		// Rendering text outside of the viewport is fucked up
-		// so, need to prevent it
-		bool isTextInsideViewport = true;
 
-		float tsX, tsY;
-		tsX = xPos + 20.f;
-		tsY = yPos + 40.f;		
-		tsX += panX;
-		tsY += panY;
-		tsX *= zoomLevels[zoom];
-		tsY *= zoomLevels[zoom];
-		tsX += pixel_w() / 2.f;
-		tsY += pixel_h() / 2.f;
-
-		if (tsX < 0 || tsX > pixel_w() || tsY < 0 || tsY > pixel_h())
-		{
-			isTextInsideViewport = false;
-		}
 		if (g_solidFill)
 		{
 			gl_rectf(xPos, yPos, tileWidth, tileHeight);
-			if (zoom >= 4 && isTextInsideViewport)
+			if (zoom >= 4)
 			{
 				gl_color(fl_contrast(0, g_badTileColor));
 				std::string toDraw = std::to_string(x) + " / " + std::to_string(y);
-
-				glPushMatrix();
-				glLoadIdentity();
-				gl_draw(toDraw.c_str(), tsX, tsY);
-				glPopMatrix();
+				gl_draw(toDraw.c_str(), xPos + 20.f, yPos + 40.f);
 				gl_color(g_badTileColor);
 			}
 		}
 		else
 		{
 			gl_rect(xPos, yPos, tileWidth, tileHeight);
-			if (zoom >= 4 && isTextInsideViewport)
+			if (zoom >= 4)
 			{
 				std::string toDraw = std::to_string(x) + " / " + std::to_string(y);
-				glPushMatrix();
-				glLoadIdentity();
-				gl_draw(toDraw.c_str(), tsX, tsY);
-				glPopMatrix();
+				gl_draw(toDraw.c_str(), xPos + 20.f, yPos + 40.f);
 			}
 		}
 	}
