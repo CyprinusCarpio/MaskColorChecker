@@ -46,6 +46,73 @@ std::mutex g_faultyTilesQueueMutex;
 
 std::deque<std::filesystem::path> g_recentProjects;
 
+std::string g_widgetTheme;
+std::string g_colorTheme;
+Fl_Color    g_systemBackgroundColor;
+Fl_Color    g_systemBackground2Color;
+Fl_Color    g_systemForegroundColor;
+Fl_Color    g_systemSelectionColor;
+
+void SetColorScheme()
+{
+	if (g_colorTheme == "Automatic")
+	{
+#if defined(_WIN32)
+		HKEY key;
+		DWORD value = 0;
+		DWORD size = sizeof(DWORD);
+		RegOpenKeyExW(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", 0, KEY_READ, &key);
+		RegQueryValueExW(key, L"AppsUseLightTheme", NULL, NULL, (LPBYTE)&value, &size);
+		RegCloseKey(key);
+		if (value == 1)
+		{
+			// Light theme
+			Fl::background(210, 210, 210);
+			Fl::background2(240, 240, 240);
+			Fl::foreground(0, 0, 0);
+		}
+		else
+		{
+			// Dark theme
+			Fl::background(22, 22, 22);
+			Fl::background2(44, 44, 44);
+			Fl::foreground(255, 255, 255);
+		}
+#else
+		// Dark theme
+		Fl::background(22, 22, 22);
+		Fl::background2(44, 44, 44);
+		Fl::foreground(255, 255, 255);
+#endif
+	}
+	else if (g_colorTheme == "Dark")
+	{
+		// Dark theme
+		Fl::background(22, 22, 22);
+		Fl::background2(44, 44, 44);
+		Fl::foreground(255, 255, 255);
+	}
+	else if (g_colorTheme == "Light")
+	{
+		// Light theme
+		Fl::background(210, 210, 210);
+		Fl::background2(240, 240, 240);
+		Fl::foreground(0, 0, 0);
+		//Fl::set_color(FL_SELECTION_COLOR, 0, 0, 200);
+	}
+	else if (g_colorTheme == "System")
+	{
+		uchar r, g, b;
+		Fl::get_color(g_systemBackgroundColor, r, g, b);
+		Fl::background(r, g, b);
+		Fl::get_color(g_systemForegroundColor, r, g, b);
+		Fl::foreground(r, g, b);
+		Fl::get_color(g_systemBackground2Color, r, g, b);
+		Fl::background2(r, g, b);
+	}
+	Fl::redraw();
+}
+
 void PlotLine(unsigned int* img, int x0, int y0, int x1, int y1, unsigned int color)
 {
 	int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
@@ -403,6 +470,10 @@ void MenuCB(Fl_Widget* widget, void* d)
 
 void InitializeProgram()
 {
+	g_systemBackgroundColor = Fl::get_color(FL_BACKGROUND_COLOR);
+	g_systemBackground2Color = Fl::get_color(FL_BACKGROUND2_COLOR);
+	g_systemForegroundColor = Fl::get_color(FL_FOREGROUND_COLOR);
+	g_systemSelectionColor = Fl::get_color(FL_SELECTION_COLOR);
 
 #ifdef _WIN32
 	std::string appdata = std::getenv("APPDATA");
@@ -432,6 +503,68 @@ void InitializeProgram()
 						i++;
 					}
 				}
+				g_colorTheme = config->get_as<std::string>("colorTheme").value_or("Automatic");
+				g_widgetTheme = config->get_as<std::string>("widgetTheme").value_or("gtk+");
+
+				if (g_colorTheme != "Automatic" && g_colorTheme != "Dark" && g_colorTheme != "Light" && g_colorTheme != "System")
+				{
+					g_colorTheme = "Automatic";
+				}
+
+				if (g_widgetTheme != "base" && g_widgetTheme != "none" && g_widgetTheme != "plastic" && g_widgetTheme != "gtk+" && g_widgetTheme != "gleam" && g_widgetTheme != "oxy")
+				{
+					g_widgetTheme = "base";
+				}
+
+				if (g_widgetTheme == "base")
+				{
+					Fl_Menu_Item* i = (Fl_Menu_Item*)g_menuBar->find_item("Theme/base");
+					g_menuBar->setonly(i);
+				}
+				else if (g_widgetTheme == "plastic")
+				{
+					Fl_Menu_Item* i = (Fl_Menu_Item*)g_menuBar->find_item("Theme/plastic");
+					g_menuBar->setonly(i);
+				}
+				else if (g_widgetTheme == "gtk+")
+				{
+					Fl_Menu_Item* i = (Fl_Menu_Item*)g_menuBar->find_item("Theme/gtk+");
+					g_menuBar->setonly(i);
+				}
+				else if (g_widgetTheme == "gleam")
+				{
+					Fl_Menu_Item* i = (Fl_Menu_Item*)g_menuBar->find_item("Theme/gleam");
+					g_menuBar->setonly(i);
+				}
+				else if (g_widgetTheme == "oxy")
+				{
+					Fl_Menu_Item* i = (Fl_Menu_Item*)g_menuBar->find_item("Theme/oxy");
+					g_menuBar->setonly(i);
+				}
+
+				if (g_colorTheme == "Automatic")
+				{
+					Fl_Menu_Item* i = (Fl_Menu_Item*)g_menuBar->find_item("Theme/Auto colors");
+					g_menuBar->setonly(i);
+				}
+				else if (g_colorTheme == "Dark")
+				{
+					Fl_Menu_Item* i = (Fl_Menu_Item*)g_menuBar->find_item("Theme/Dark colors");
+					g_menuBar->setonly(i);
+				}
+				else if (g_colorTheme == "Light")
+				{
+					Fl_Menu_Item* i = (Fl_Menu_Item*)g_menuBar->find_item("Theme/Light colors");
+					g_menuBar->setonly(i);
+				}
+				else if (g_colorTheme == "System")
+				{
+					Fl_Menu_Item* i = (Fl_Menu_Item*)g_menuBar->find_item("Theme/System colors");
+					g_menuBar->setonly(i);
+				}
+
+				Fl::scheme(g_widgetTheme.c_str());
+				SetColorScheme();
 			}
 		}
 	}
@@ -461,6 +594,8 @@ void ShutdownProgram()
 		std::shared_ptr<cpptoml::table> root = cpptoml::make_table();
 		std::shared_ptr<cpptoml::table> config = cpptoml::make_table();
 		std::shared_ptr<cpptoml::array> recentProjects = cpptoml::make_array();
+		std::shared_ptr<cpptoml::value<std::string>> colorTheme = cpptoml::make_value<std::string>(g_colorTheme.c_str());
+		std::shared_ptr<cpptoml::value<std::string>> widgetTheme = cpptoml::make_value<std::string>(g_widgetTheme.c_str());
 
 		for (std::filesystem::path& path : g_recentProjects)
 		{
@@ -468,6 +603,8 @@ void ShutdownProgram()
 		
 		}
 		config->insert("recent", recentProjects);
+		config->insert("colorTheme", colorTheme);
+		config->insert("widgetTheme", widgetTheme);
 		root->insert("maskcolorchecker", config);
 
 		configFile << *root;
@@ -941,6 +1078,51 @@ void OnGui(int e)
 			CheckParametersValid();
 			g_projectPath = toOpen;
 		}
+	}
+	else if (e == CB_COLORS_AUTO)
+	{
+		g_colorTheme = "Automatic";
+		SetColorScheme();
+	}
+	else if (e == CB_COLORS_LIGHT)
+	{
+		g_colorTheme = "Light";
+		SetColorScheme();
+	}
+	else if (e == CB_COLORS_DARK)
+	{
+		g_colorTheme = "Dark";
+		SetColorScheme();
+	}
+	else if (e == CB_COLORS_SYSTEM)
+	{
+		g_colorTheme = "System";
+		SetColorScheme();
+	}
+	else if (e == CB_THEME_BASE)
+	{
+		g_widgetTheme = "base";
+		Fl::scheme(g_widgetTheme.c_str());
+	}
+	else if (e == CB_THEME_PLASTIC)
+	{
+		g_widgetTheme = "plastic";
+		Fl::scheme(g_widgetTheme.c_str());
+	}
+	else if (e == CB_THEME_GTK)
+	{
+		g_widgetTheme = "gtk+";
+		Fl::scheme(g_widgetTheme.c_str());
+	}
+	else if (e == CB_THEME_GLEAM)
+	{
+		g_widgetTheme = "gleam";
+		Fl::scheme(g_widgetTheme.c_str());
+	}
+	else if (e == CB_THEME_OXY)
+	{
+		g_widgetTheme = "oxy";
+		Fl::scheme(g_widgetTheme.c_str());
 	}
 }
 

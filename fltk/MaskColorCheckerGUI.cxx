@@ -342,6 +342,42 @@ static void cb_g_menuItemSaveAs(Fl_Menu_*, void*) {
   OnGui(CB_SAVEAS);
 }
 
+static void cb_base(Fl_Menu_*, void*) {
+  OnGui(CB_THEME_BASE);
+}
+
+static void cb_plastic(Fl_Menu_*, void*) {
+  OnGui(CB_THEME_PLASTIC);
+}
+
+static void cb_gtk(Fl_Menu_*, void*) {
+  OnGui(CB_THEME_GTK);
+}
+
+static void cb_gleam(Fl_Menu_*, void*) {
+  OnGui(CB_THEME_GLEAM);
+}
+
+static void cb_oxy(Fl_Menu_*, void*) {
+  OnGui(CB_THEME_OXY);
+}
+
+static void cb_Auto(Fl_Menu_*, void*) {
+  OnGui(CB_COLORS_AUTO);
+}
+
+static void cb_Dark(Fl_Menu_*, void*) {
+  OnGui(CB_COLORS_DARK);
+}
+
+static void cb_Light(Fl_Menu_*, void*) {
+  OnGui(CB_COLORS_LIGHT);
+}
+
+static void cb_System(Fl_Menu_*, void*) {
+  OnGui(CB_COLORS_SYSTEM);
+}
+
 static void cb_Help(Fl_Menu_*, void*) {
   OnGui(CB_HELP);
 }
@@ -355,6 +391,17 @@ Fl_Menu_Item menu_g_menuBar[] = {
  {"@fileopen Open", FL_CTRL|'o',  (Fl_Callback*)cb_fileopen, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"@filesave Save", FL_CTRL|'s',  (Fl_Callback*)cb_g_menuItemSave, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"@filesaveas Save as", 0,  (Fl_Callback*)cb_g_menuItemSaveAs, 0, 128, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {0,0,0,0,0,0,0,0,0},
+ {"Theme", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"base", 0,  (Fl_Callback*)cb_base, 0, 8, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"plastic", 0,  (Fl_Callback*)cb_plastic, 0, 8, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"gtk+", 0,  (Fl_Callback*)cb_gtk, 0, 8, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"gleam", 0,  (Fl_Callback*)cb_gleam, 0, 8, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"oxy", 0,  (Fl_Callback*)cb_oxy, 0, 136, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"Auto colors", 0,  (Fl_Callback*)cb_Auto, 0, 8, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"Dark colors", 0,  (Fl_Callback*)cb_Dark, 0, 8, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"Light colors", 0,  (Fl_Callback*)cb_Light, 0, 8, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"System colors", 0,  (Fl_Callback*)cb_System, 0, 8, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0},
  {"About", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"@. Help  ", 0,  (Fl_Callback*)cb_Help, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},

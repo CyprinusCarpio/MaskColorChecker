@@ -23,7 +23,7 @@ Function {make_window()} {open
       } {
         Fl_Spinner g_overlapSpinner {
           label {Actual overlap:}
-          callback {OnGui(CB_OVERLAP);} selected
+          callback {OnGui(CB_OVERLAP);}
           tooltip {Mapframe properties > Samplers > Actual overlap (px)} xywh {115 85 60 20} when 1 minimum 0 maximum 512 value 0
         }
         Fl_Spinner g_colorsPerTileSpinner {
@@ -126,6 +126,56 @@ Function {make_window()} {open
           label {@filesaveas Save as}
           callback {OnGui(CB_SAVEAS);}
           xywh {0 0 30 20} divider
+        }
+      }
+      Submenu {} {
+        label Theme open selected
+        xywh {0 0 100 20}
+      } {
+        MenuItem {} {
+          label base
+          callback {OnGui(CB_THEME_BASE);}
+          xywh {0 0 100 20} type Radio
+        }
+        MenuItem {} {
+          label plastic
+          callback {OnGui(CB_THEME_PLASTIC);}
+          xywh {0 0 100 20} type Radio
+        }
+        MenuItem {} {
+          label {gtk+}
+          callback {OnGui(CB_THEME_GTK);}
+          xywh {0 0 100 20} type Radio
+        }
+        MenuItem {} {
+          label gleam
+          callback {OnGui(CB_THEME_GLEAM);}
+          xywh {0 0 100 20} type Radio
+        }
+        MenuItem {} {
+          label oxy
+          callback {OnGui(CB_THEME_OXY);}
+          xywh {0 0 100 20} type Radio divider
+        }
+        MenuItem {} {
+          label {Auto colors}
+          callback {OnGui(CB_COLORS_AUTO);}
+          xywh {0 0 100 20} type Radio
+        }
+        MenuItem {} {
+          label {Dark colors}
+          callback {OnGui(CB_COLORS_DARK);}
+          xywh {0 0 100 20} type Radio
+        }
+        MenuItem {} {
+          label {Light colors}
+          callback {OnGui(CB_COLORS_LIGHT);}
+          xywh {0 0 100 20} type Radio
+        }
+        MenuItem {} {
+          label {System colors}
+          callback {OnGui(CB_COLORS_SYSTEM);}
+          xywh {0 0 100 20} type Radio
         }
       }
       Submenu {} {

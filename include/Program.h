@@ -8,6 +8,15 @@
 #define CB_SAVE          101
 #define CB_SAVEAS        102
 #define CB_QUIT          103
+#define CB_THEME_BASE    110
+#define CB_THEME_PLASTIC 111
+#define CB_THEME_GTK     112
+#define CB_THEME_GLEAM   113
+#define CB_THEME_OXY     114
+#define CB_COLORS_AUTO   115
+#define CB_COLORS_DARK   116
+#define CB_COLORS_LIGHT  117
+#define CB_COLORS_SYSTEM 118
 #define CB_HELP          120
 #define CB_ABOUT         121
 #define CB_TILESIZE      200

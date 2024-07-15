@@ -23,7 +23,6 @@ int main(int argc, char* argv[])
 
 	Fl_Double_Window* wnd = make_window();
 	Fl::scheme("gtk+");
-	InitializeProgram();
 
 #if defined(_WIN32) && defined(RELEASE_BUILD)
 	int argc;
@@ -33,6 +32,7 @@ int main(int argc, char* argv[])
 #else
 	wnd->show(argc, argv);
 #endif
+	InitializeProgram();
 	while (true)
 	{
 		int ret = Fl::check();
