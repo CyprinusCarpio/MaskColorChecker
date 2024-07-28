@@ -377,7 +377,7 @@ bool CheckParametersValid()
 
 void MenuCB(Fl_Widget* widget, void* d)
 {
-	int data = (int)d;
+	std::size_t data = (std::size_t)d;
 	if (data == CB_QUIT)
 	{
 		exit(0);
