@@ -5,12 +5,8 @@
 #include <FL/fl_draw.H>
 
 #include <string>
-#include <iostream>
-
-
 
 const float zoomLevels[] = {0.05f, 0.1f, 0.125f, 0.25f, 0.35f, 0.5f, 0.75f, 0.90f, 1.f, 1.25f, 1.5f, 1.75f, 2.f, 3.f};
-
 
 Canvas::Canvas(int X, int Y, int W, int H) : Fl_Box(X, Y, W, H)
 {
@@ -33,37 +29,17 @@ void Canvas::draw()
 	// stop drawing outside of the widget
 	fl_push_clip(x(), y(), w(), h());
 
-	/*glPushMatrix();
-	glTranslatef(pixel_w() / 2.0f, pixel_h() / 2.0f, 0.0f);
-	glScalef(zoomLevels[zoom], zoomLevels[zoom], 0);
-	glTranslatef(panX, panY, 0);
-
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(0.0f, 0.0f);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(maskImgX * maskImageScale, 0.0f);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(maskImgX * maskImageScale, maskImgY * maskImageScale);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0.0f, maskImgY * maskImageScale);
-	glEnd();
-	glBindTexture(GL_TEXTURE_2D, 0);*/
-
-	rgb->draw(x() + panX, y() + panY);
+	rgb->draw(x() + (panX * zoomLevels[zoom]) + (w() / 2.f), y() + (panY * zoomLevels[zoom]) + (h() / 2.f));
 	
 	if (g_drawGrid)
 	{
-		//drawGrid();
+		drawGrid();
 	}
 
 	fl_color(g_badTileColor);
 	fl_font(FL_HELVETICA_BOLD, 14);
 
-	//drawFaultyTiles();
-
-	//glPopMatrix();
+	drawFaultyTiles();
 
 	std::string zoomText = "zoom = " + std::to_string(zoomLevels[zoom]) + " panX = " + std::to_string(panX) + " panY = " + std::to_string(panY);
 	fl_draw(zoomText.c_str(), x() + 10.f, y() + 15.f);
@@ -74,12 +50,12 @@ void Canvas::draw()
 	std::string screenText = "screenPosX = " + std::to_string(screenMousePosX) + " screenPosY = " + std::to_string(screenMousePosY);
 	fl_draw(screenText.c_str(), x() + 10.f, y() + 55.f);
 
-	if(false)
-	//if(imgMousePosY >= 0 && imgMousePosY < maskImgY && imgMousePosX > 0 && imgMousePosX < maskImgX)
+	if(imgMousePosY >= 0 && imgMousePosY < maskImgY && imgMousePosX > 0 && imgMousePosX < maskImgX)
 	{
-		std::string rgbText = "R = " + std::to_string((int)rgb->data()[imgMousePosY * maskImgY * 3 + imgMousePosX * 3]) +
-			" G = " + std::to_string((int)rgb->data()[imgMousePosY * maskImgY * 3 + imgMousePosX * 3 + 1]) +
-			" B = " + std::to_string((int)rgb->data()[imgMousePosY * maskImgY * 3 + imgMousePosX * 3 + 2]);
+		const char* const data = *rgb->data();
+		std::string rgbText = "R = " + std::to_string((int)data[imgMousePosY * maskImgY * 3 + imgMousePosX * 3]) +
+			" G = " + std::to_string((int)data[imgMousePosY * maskImgY * 3 + imgMousePosX * 3 + 1]) +
+			" B = " + std::to_string((int)data[imgMousePosY * maskImgY * 3 + imgMousePosX * 3 + 2]);
 
 		fl_draw(rgbText.c_str(), x() + 10.f, y() + 75.f);
 	}
@@ -182,96 +158,107 @@ int Canvas::handle(int e)
 
 void Canvas::drawGrid()
 {
-	/*gl_color(g_gridColor);
+	fl_color(g_gridColor);
 
 	int spacing = g_tileSize - g_overlap;
-	for (int x = 0; x < g_tilesCount; x++)
+	for (int X = 0; X < g_tilesCount; X++)
 	{
 		int tileWidth = g_tileSize;
-		int xPos = (spacing * x) - (g_overlap / 2.f);
-		if (x == 0)
+		int xPos = (spacing * X) - (g_overlap / 2.f);
+		if (X == 0)
 		{
 			tileWidth = g_tileSize - (g_overlap / 2.f);
 			xPos = 0;
 		}
-		else if (x == g_tilesCount - 1)
+		else if (X == g_tilesCount - 1)
 		{
-			tileWidth = (maskImgX * maskImageScale) - xPos + 1;
+			tileWidth = maskImgX - xPos + 1;
 		}
 
-		for (int y = 0; y < g_tilesCount; y++)
+		for (int Y = 0; Y < g_tilesCount; Y++)
 		{
 			int tileHeight = g_tileSize;
 
-			int yPos = (spacing * y) - (g_overlap / 2.f);
-			if (y == 0)
+			int yPos = (spacing * Y) - (g_overlap / 2.f);
+			if (Y == 0)
 			{
 				tileHeight = g_tileSize - (g_overlap / 2.f);
 				yPos = 0;
 			}
-			else if (y == g_tilesCount - 1)
+			else if (Y == g_tilesCount - 1)
 			{
-				tileHeight = (maskImgY * maskImageScale) - yPos + 1;
+				tileHeight = maskImgY - yPos + 1;
 			}
 
-			gl_rect(xPos, yPos, tileWidth, tileHeight);
+			fl_rect((xPos * zoomLevels[zoom]) + x() + (panX * zoomLevels[zoom]) + (w() / 2.f),
+				    (yPos * zoomLevels[zoom]) + y() + (panY * zoomLevels[zoom]) + (h() / 2.f),
+				    tileWidth * zoomLevels[zoom], tileHeight * zoomLevels[zoom]);
 		}
-	}*/
+	}
 }
 
 void Canvas::drawFaultyTiles()
 {
-	/*int spacing = g_tileSize - g_overlap;
+	int spacing = g_tileSize - g_overlap;
 
 	for (Tile& tile : *faultyTiles)
 	{
-		int x = tile.x;
-		int y = tile.y;
+		int X = tile.x;
+		int Y = tile.y;
 		int tileWidth = g_tileSize;
-		int xPos = (spacing * x) - (g_overlap / 2.f);
-		if (x == 0)
+		int xPos = (spacing * X) - (g_overlap / 2.f);
+		if (X == 0)
 		{
 			tileWidth = g_tileSize - (g_overlap / 2.f);
 			xPos = 0;
 		}
-		else if (x == g_tilesCount - 1)
+		else if (X == g_tilesCount - 1)
 		{
-			tileWidth = (maskImgX * maskImageScale) - xPos + 1;
+			tileWidth = maskImgX - xPos + 1;
 		}
 		int tileHeight = g_tileSize;
 
-		int yPos = (spacing * y) - (g_overlap / 2.f);
-		if (y == 0)
+		int yPos = (spacing * Y) - (g_overlap / 2.f);
+		if (Y == 0)
 		{
 			tileHeight = g_tileSize - (g_overlap / 2.f);
 			yPos = 0;
 		}
-		else if (y == g_tilesCount - 1)
+		else if (Y == g_tilesCount - 1)
 		{
-			tileHeight = (maskImgY * maskImageScale) - yPos + 1;
+			tileHeight = maskImgY - yPos + 1;
 		}
+
+		float textOffX = 20.f * zoomLevels[zoom];
+		float textOffY = 40.f * zoomLevels[zoom];
 
 		if (g_solidFill)
 		{
-			gl_rectf(xPos, yPos, tileWidth, tileHeight);
+			fl_rectf((xPos * zoomLevels[zoom]) + x() + (panX * zoomLevels[zoom]) + (w() / 2.f),
+				    (yPos * zoomLevels[zoom]) + y() + (panY * zoomLevels[zoom]) + (h() / 2.f),
+				    tileWidth * zoomLevels[zoom], tileHeight * zoomLevels[zoom]);
 			if (zoom >= 4)
 			{
-				gl_color(fl_contrast(0, g_badTileColor));
-				std::string toDraw = std::to_string(x) + " / " + std::to_string(y);
-				gl_draw(toDraw.c_str(), xPos + 20.f, yPos + 40.f);
-				gl_color(g_badTileColor);
+				fl_color(fl_contrast(0, g_badTileColor));
+				std::string toDraw = std::to_string(X) + " / " + std::to_string(Y);
+				fl_draw(toDraw.c_str(), (xPos * zoomLevels[zoom]) + x() + (panX * zoomLevels[zoom]) + (w() / 2.f) + textOffX,
+					   (yPos * zoomLevels[zoom]) + y() + (panY * zoomLevels[zoom]) + (h() / 2.f) + textOffY);
+				fl_color(g_badTileColor);
 			}
 		}
 		else
 		{
-			gl_rect(xPos, yPos, tileWidth, tileHeight);
+			fl_rect((xPos * zoomLevels[zoom]) + x() + (panX * zoomLevels[zoom]) + (w() / 2.f),
+				   (yPos * zoomLevels[zoom]) + y() + (panY * zoomLevels[zoom]) + (h() / 2.f),
+				   tileWidth * zoomLevels[zoom], tileHeight * zoomLevels[zoom]);
 			if (zoom >= 4)
 			{
-				std::string toDraw = std::to_string(x) + " / " + std::to_string(y);
-				gl_draw(toDraw.c_str(), xPos + 20.f, yPos + 40.f);
+				std::string toDraw = std::to_string(X) + " / " + std::to_string(Y);
+				fl_draw(toDraw.c_str(), (xPos * zoomLevels[zoom]) + x() + (panX * zoomLevels[zoom]) + (w() / 2.f) + textOffX,
+					yPos * zoomLevels[zoom] + y() + (panY * zoomLevels[zoom]) + (h() / 2.f) + textOffY);
 			}
 		}
-	}*/
+	}
 
 }
 
