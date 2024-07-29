@@ -101,7 +101,7 @@ Function {make_window()} {open
         }
       }
       Fl_Box g_canvas {selected
-        xywh {180 20 220 330} box FLAT_BOX color 0 resizable
+        xywh {180 20 220 330} box FLAT_BOX color 32 resizable
         class Canvas
       }
     }
