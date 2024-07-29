@@ -39,4 +39,4 @@ set(EXE_NAME "MaskColorChecker")
 
 set_target_properties(MaskColorChecker PROPERTIES OUTPUT_NAME ${EXE_NAME})
 
-target_link_libraries(MaskColorChecker PRIVATE fltk fltk_gl fltk_forms fltk_images)
+target_link_libraries(MaskColorChecker PRIVATE fltk fltk_forms fltk_images)

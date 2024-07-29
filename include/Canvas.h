@@ -2,17 +2,16 @@
 #define CANVAS_H
 
 #include <FL/Fl.H>
-#include <FL/Fl_Gl_Window.H>
-#include <FL/gl.h>
+#include <FL/Fl_Box.H>
+#include <FL/Fl_RGB_Image.H>
 
 #include <deque>
 
 struct Tile;
 
-class Canvas : public Fl_Gl_Window
+class Canvas : public Fl_Box
 {
 	int zoom = 8;
-	//float zoom = 1.f;
 	float panX = 0.f;
 	float panY = 0.f;
 	int prevPanX = 0;
@@ -26,9 +25,7 @@ class Canvas : public Fl_Gl_Window
 	int screenMousePosX = 0;
 	int screenMousePosY = 0;
 
-	GLuint textureID = 0;
-	unsigned char* maskImage = nullptr;
-	float maskImageScale = 1.f;
+	Fl_RGB_Image* rgb = nullptr;
 
 	std::deque<Tile>* faultyTiles = nullptr;
 public:

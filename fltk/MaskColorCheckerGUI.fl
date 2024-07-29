@@ -100,8 +100,8 @@ Function {make_window()} {open
           tooltip {Save the grid to a image} xywh {75 290 100 25} labelsize 12 deactivate
         }
       }
-      Fl_Box g_canvas {
-        xywh {180 20 220 330} resizable
+      Fl_Box g_canvas {selected
+        xywh {180 20 220 330} box FLAT_BOX color 0 resizable
         class Canvas
       }
     }
@@ -129,7 +129,7 @@ Function {make_window()} {open
         }
       }
       Submenu {} {
-        label Theme open selected
+        label Theme open
         xywh {0 0 100 20}
       } {
         MenuItem {} {

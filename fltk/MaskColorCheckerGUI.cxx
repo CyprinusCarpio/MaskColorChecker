@@ -516,8 +516,8 @@ Fl_Double_Window* make_window() {
         o->end();
       } // Fl_Group* o
       { g_canvas = new Canvas(180, 20, 220, 330);
-        g_canvas->box(FL_NO_BOX);
-        g_canvas->color(FL_BACKGROUND_COLOR);
+        g_canvas->box(FL_FLAT_BOX);
+        g_canvas->color(FL_FOREGROUND_COLOR);
         g_canvas->selection_color(FL_BACKGROUND_COLOR);
         g_canvas->labeltype(FL_NORMAL_LABEL);
         g_canvas->labelfont(0);

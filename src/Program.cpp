@@ -2,8 +2,6 @@
 #include "cpptoml.h"
 #include "MaskColorCheckerGUI.h"
 
-#include "stb_image.h" //first defined in Canvas.cpp
-
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
@@ -11,6 +9,7 @@
 #include <FL/fl_ask.H> 
 #include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Native_File_Chooser.H>
+#include <FL/Fl_BMP_Image.H>
 
 #include <string>
 #include <filesystem>
@@ -23,6 +22,10 @@
 #include <algorithm>
 #include <map>
 #include <vector>
+
+#if defined(_WIN32)
+#include <Windows.h>
+#endif
 
 unsigned int  g_tileSize      = 256;
 unsigned int  g_overlap       = 0;
@@ -452,15 +455,20 @@ void MenuCB(Fl_Widget* widget, void* d)
 		g_gridColorButton->color(g_gridColor);
 
 		int n;
-		if (g_maskImg != nullptr)
-			stbi_image_free(g_maskImg);
-		g_maskImg = stbi_load(g_maskPath.u8string().c_str(), &g_maskImgX, &g_maskImgY, &n, 3);
-		if (g_maskImg == nullptr)
+		if (g_maskImg != nullptr) delete[] g_maskImg;
+		Fl_BMP_Image* bmp = new Fl_BMP_Image(g_maskPath.u8string().c_str());
+		if (bmp->fail() == Fl_Image::ERR_NO_IMAGE || bmp->fail() == Fl_Image::ERR_FILE_ACCESS || bmp->fail() == Fl_Image::ERR_FORMAT)
 		{
 			fl_message_title("Error");
 			fl_alert("Failed to load project file");
+			delete bmp;
 			return;
 		}
+		g_maskImg = new unsigned char[bmp->data_w() * bmp->data_h() * 3];
+		std::memcpy(g_maskImg, *bmp->data(), bmp->data_w() * bmp->data_h() * 3);
+		g_maskImgX = bmp->data_w();
+		g_maskImgY = bmp->data_h();
+		delete bmp;
 		g_canvas->set(g_maskImg, g_maskImgX, g_maskImgY, &g_faultyTiles);
 		g_maskPathOutput->value(g_maskPath.u8string().c_str());
 		CheckParametersValid();
@@ -575,8 +583,7 @@ void InitializeProgram()
 
 void ShutdownProgram()
 {
-	if (g_maskImg != nullptr)
-		stbi_image_free(g_maskImg);
+	if (g_maskImg != nullptr) delete[] g_maskImg;
 #ifdef _WIN32
 	std::string appdata = std::getenv("APPDATA");
 	std::filesystem::path configPath = std::filesystem::path(appdata) / "MaskColorChecker" / "MaskColorChecker.toml";
@@ -735,15 +742,20 @@ void OnGui(int e)
 			g_faultyTiles.clear();
 			g_maskPath = std::filesystem::u8path(browseMaskFileChooser.filename());
 			int n;
-			if (g_maskImg != nullptr)
-				stbi_image_free(g_maskImg);
-			g_maskImg = stbi_load(browseMaskFileChooser.filename(), &g_maskImgX, &g_maskImgY, &n, 3);
-			if (g_maskImg == nullptr)
+			if (g_maskImg != nullptr) delete[] g_maskImg;
+			Fl_BMP_Image* bmp = new Fl_BMP_Image(g_maskPath.u8string().c_str());
+			if (bmp->fail() == Fl_Image::ERR_NO_IMAGE || bmp->fail() == Fl_Image::ERR_FILE_ACCESS || bmp->fail() == Fl_Image::ERR_FORMAT)
 			{
 				fl_message_title("Error");
 				fl_alert("Failed to load the mask");
+				delete bmp;
 				return;
 			}
+			g_maskImg = new unsigned char[bmp->data_w() * bmp->data_h() * 3];
+			std::memcpy(g_maskImg, bmp->data(), bmp->data_w() * bmp->data_h() * 3);
+			g_maskImgX = bmp->data_w();
+			g_maskImgY = bmp->data_h();
+			delete bmp;
 			g_canvas->set(g_maskImg, g_maskImgX, g_maskImgY, &g_faultyTiles);
 			g_maskPathOutput->value(browseMaskFileChooser.filename());
 			g_unsaved = true;
@@ -1064,15 +1076,20 @@ void OnGui(int e)
 			g_gridColorButton->color(g_gridColor);
 
 			int n;
-			if (g_maskImg != nullptr)
-				stbi_image_free(g_maskImg);
-			g_maskImg = stbi_load(g_maskPath.u8string().c_str(), &g_maskImgX, &g_maskImgY, &n, 3);
-			if (g_maskImg == nullptr)
+			if (g_maskImg != nullptr) delete[] g_maskImg;
+			Fl_BMP_Image* bmp = new Fl_BMP_Image(g_maskPath.u8string().c_str());
+			if (bmp->fail() == Fl_Image::ERR_NO_IMAGE || bmp->fail() == Fl_Image::ERR_FILE_ACCESS || bmp->fail() == Fl_Image::ERR_FORMAT)
 			{
 				fl_message_title("Error");
 				fl_alert("Failed to load project file");
+				delete bmp;
 				return;
 			}
+			g_maskImg = new unsigned char[bmp->data_w() * bmp->data_h() * 3];
+			std::memcpy(g_maskImg, bmp->data(), bmp->data_w() * bmp->data_h() * 3);
+			g_maskImgX = bmp->data_w();
+			g_maskImgY = bmp->data_h();
+			delete bmp;
 			g_canvas->set(g_maskImg, g_maskImgX, g_maskImgY, &g_faultyTiles);
 			g_maskPathOutput->value(g_maskPath.u8string().c_str());
 			CheckParametersValid();
