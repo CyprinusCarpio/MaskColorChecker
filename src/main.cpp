@@ -17,6 +17,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 int main(int argc, char* argv[])
 #endif
 {
+	Fl_Input::cut_menu_text = "    Cut   ";
+	Fl_Input::copy_menu_text = "    Copy   ";
+	Fl_Input::paste_menu_text = "    Paste   ";
+
 	Fl_Pixmap iconPixmap(icon_xpm);
 	Fl_RGB_Image icon(&iconPixmap);
 	Fl_Window::default_icon(&icon);
