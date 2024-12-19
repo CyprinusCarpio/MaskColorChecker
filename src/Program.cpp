@@ -383,6 +383,7 @@ void MenuCB(Fl_Widget* widget, void* d)
 	std::size_t data = (std::size_t)d;
 	if (data == CB_QUIT)
 	{
+		ShutdownProgram();
 		exit(0);
 	}
 	if (data >= 200) // Load recent project
