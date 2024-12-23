@@ -578,7 +578,7 @@ void InitializeProgram()
 		}
 	}
 
-	g_menuBar->add("Project/@1+ Quit   ", 'q' + FL_CTRL, (Fl_Callback*)MenuCB, (void*)CB_QUIT, 0);
+	g_menuBar->add("Project/@1+ &Quit   ", 'q' + FL_CTRL, (Fl_Callback*)MenuCB, (void*)CB_QUIT, 0);
 	CheckParametersValid();
 }
 
