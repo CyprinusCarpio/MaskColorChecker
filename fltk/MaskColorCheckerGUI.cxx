@@ -418,7 +418,7 @@ Fl_Double_Window* make_window() {
       { Fl_Group* o = new Fl_Group(0, 20, 180, 330, "Mask Color Checker v0.2");
         o->box(FL_UP_BOX);
         o->labelfont(3);
-        o->labelsize(15);
+        o->labelsize(13);
         o->align(Fl_Align(FL_ALIGN_TOP|FL_ALIGN_INSIDE));
         { g_overlapSpinner = new Fl_Spinner(115, 85, 60, 20, "Actual overlap:");
           g_overlapSpinner->tooltip("Mapframe properties > Samplers > Actual overlap (px)");

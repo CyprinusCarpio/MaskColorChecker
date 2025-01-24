@@ -12,14 +12,14 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label {Mask Color Checker v0.2} open
-    xywh {598 519 400 350} type Double resizable size_range {400 350 0 0} visible
+    xywh {704 491 400 350} type Double resizable size_range {400 350 0 0} visible
   } {
     Fl_Group {} {open
       xywh {0 20 400 330} resizable
     } {
       Fl_Group {} {
         label {Mask Color Checker v0.2} open
-        xywh {0 20 180 330} box UP_BOX labelfont 3 labelsize 15 align 17
+        xywh {0 20 180 330} box UP_BOX labelfont 3 labelsize 13 align 17
       } {
         Fl_Spinner g_overlapSpinner {
           label {Actual overlap:}
@@ -105,11 +105,11 @@ Function {make_window()} {open
         class Canvas
       }
     }
-    Fl_Menu_Bar g_menuBar {open
+    Fl_Menu_Bar g_menuBar {open selected
       xywh {0 0 400 20} labelsize 12
     } {
       Submenu g_projectMenu {
-        label {Pr&oject} open selected
+        label {Pr&oject} open
         xywh {0 0 62 20}
       } {
         MenuItem {} {
